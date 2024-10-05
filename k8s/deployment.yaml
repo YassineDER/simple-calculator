@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yassine-dep
+spec:
+  replicas: 3 # Number of pods to ensure are running
+  selector:
+    matchLabels:
+      app: yassine-dep
+  template:
+    metadata:
+      labels:
+        app: yassine-dep
+    spec:
+      containers:
+        - name: yassine-dep
+          image: yassineder/simple-calculator:v1
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "500m"
+          ports:
+            - name: node-port
+              containerPort: 3000
+              protocol: TCP
