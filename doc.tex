@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[letterpaper,top=0.7cm,bottom=1.5cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+\title{Rapport TP Calculatrice - Middleware}
+\author{Yassine Dergaoui}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Approche utilisée}
+
+\subsection{main-simple-calculator.js}
+D'après le fichier \textit{test-simple-calculator.js}, le programme principal applique une opération de calcul, définie selon l'objet \textbf{NodeCommand} 
+dans le corps de la requete POST, sur un ensemble de nombres fournis.
+Pour cela, je recupère les objets \textbf{NodeCommand} et \textbf{Numbers} de la requête, j'initialise un tableau de nombres, puis j'applique l'opération de calcul sur ces nombres.
+Enfin, je renvoie le résultat de l'opération en format JSON.
+
+\subsection{Conteneurisation}
+Pour la conteneurisation, j'ai a utilisé Docker. 
+j'ai créé un fichier \textit{Dockerfile} qui contient les instructions pour construire l'image du conteneur NodeJS, comme fait dans le TP précédent.
+On suppose qu'on est déjà authentifié sur DockerHub.
+
+\begin{verbatim}
+    docker build . --tag simple-calculator:v1
+    docker tag simple-calculator:v1 yassinedergaoui/simple-calculator:v1
+    # docker login
+    docker push yassinedergaoui/simple-calculator:v1
+\end{verbatim}
+
+L'image est disponible sur DockerHub à l'adresse suivante: \href{https://hub.docker.com/r/yassineder/simple-calculator}{https://hub.docker.com/r/yassineder/simple-calculator}, et prête à être utilisée par Kubernetes.
+
+\subsection{Deploiement K8s}
+Pour le déploiement sur Kubernetes, j'ai crée les fichiers \textit{deployment.yaml} et \textit{service.yaml} dans le dossier \textit{k8s/}.\\
+
+Le fichier \textit{deployment.yaml} contient les spécifications du déploiement, notamment le nombre de réplicas, le conteneur utilisé, et les ports utilisés. J'ai voulu ajouter les replicas pour démontrer la scalabilité de l'application en assurant le nombre de pods en fonction de la charge.
+
+Le fichier \textit{service.yaml} contient les spécifications du service, notamment le type de service, le port utilisé, et le port exposé comme dans le TP précédent. \\
+
+Enfin, j'ai déployé l'application sur Kubernetes en utilisant les commandes suivantes:
+\begin{verbatim}
+    kubectl create -f k8s/deployment.yaml
+    kubectl create -f k8s/service.yaml
+\end{verbatim}
+
+On peut voir l'adresse IP du service exposé en utilisant la commande:
+\begin{verbatim}
+    minikube service list
+\end{verbatim}
+
+On peut donc tester l'application en utilisant \textit{test-simple-calculator.js} avec l'adresse IP du service dans \textit{urlCalculator}.
+
+\end{document}

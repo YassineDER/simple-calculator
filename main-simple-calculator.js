@@ -23,10 +23,12 @@ app.get('/', (req, res) => {
 })
 
 app.post('/json', (req, res) => {
-    //Write this section
+    // Getting the operation and numbers from the request body and initializing the answer
     const operation = req.body['NodeCommand']
     const numbers = req.body['Numbers']
     let ans = 0
+
+    // Determine the operation and calculate the answer
     switch (operation) {
         case 'Add':
             ans = numbers.reduce((a, b) => a + b)
