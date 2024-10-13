@@ -26,9 +26,9 @@ app.post('/json', (req, res) => {
     // Getting the operation and numbers from the request body and initializing the answer
     const operation = req.body['NodeCommand']
     const numbers = req.body['Numbers']
-    let ans = 0
+    let ans;
 
-    // Determine the operation and calculate the answer
+    // Determine the operation and calculate the answer based on the operation
     switch (operation) {
         case 'Add':
             ans = numbers.reduce((a, b) => a + b)
@@ -46,6 +46,7 @@ app.post('/json', (req, res) => {
             ans = 'N/A'
     }
 
+    // Send the response back to the client
     res.json({
         'NodeCommand': operation,
         'Numbers': numbers,
